@@ -10,6 +10,9 @@ Ext.Loader.setConfig({
 Ext.Loader.setPath('Netresearch', '../bundles/netresearchtimetracker/js/netresearch');
 Ext.Loader.setPath('Ext.ux.window', '../bundles/netresearchtimetracker/js');
 
+Ext.require('Netresearch.store.Customers');
+Ext.require('Netresearch.model.Entry');
+
 /* Load necessary requirements */
 Ext.require([
     'Ext.grid.*',
@@ -74,7 +77,7 @@ function addTab(component) {
     ttt_items.push(component);
 }
 
-Ext.onDocumentReady(function() {
+Ext.onReady(function() {
     // Setup state manager
     Ext.state.Manager.setProvider(Ext.create('Ext.state.CookieProvider'));
 
@@ -85,6 +88,15 @@ Ext.onDocumentReady(function() {
     const interpretationWidget = Ext.create('Netresearch.widget.Interpretation', { itemId: 'interpretation' });
     const extrasWidget = Ext.create('Netresearch.widget.Extras', { itemId: 'extras'});
     const settingsWidget = Ext.create('Netresearch.widget.Settings', { itemId: 'settings' });
+
+    var customerStore = Ext.create('Netresearch.store.Customers', {storeId: 'customerStore'});
+    var projectStore = Ext.create('Netresearch.store.Projects', {storeId: 'projectStore'});
+    var activityStore = Ext.create('Netresearch.store.Activities', {storeId: 'activityStore'});
+    var userStore = Ext.create('Netresearch.store.Users', {storeId: 'userStore'});
+    var adminUserStore = Ext.create('Netresearch.store.AdminUsers', {storeId: 'adminUserStore'});
+    var ticketSystemStore = Ext.create('Netresearch.store.TicketSystems', {storeId: 'ticketSystemStore'});
+
+    var x = Ext.data.StoreManager.lookup('projectStore');
 
     addTab(trackingWidget);
     addTab(interpretationWidget);
@@ -151,7 +163,7 @@ Ext.onDocumentReady(function() {
     /* Key bindings */
     const keyMap = new Ext.util.KeyMap(Ext.get(document), [
         {
-            key: Ext.EventObject.A,
+            key: Ext.event.Event.A,
             alt: true,
             handler: function() {
                 if (ttt_tabpanel.isActiveTab('tracking'))
@@ -159,7 +171,7 @@ Ext.onDocumentReady(function() {
             },
             defaultEventAction: 'stopEvent'
         }, {
-            key: Ext.EventObject.C,
+            key: Ext.event.Event.C,
             alt: true,
             handler: function() {
                 if (ttt_tabpanel.isActiveTab('tracking'))
@@ -167,7 +179,7 @@ Ext.onDocumentReady(function() {
             },
             defaultEventAction: 'stopEvent'
         }, {
-            key: Ext.EventObject.D,
+            key: Ext.event.Event.D,
             alt: true,
             handler: function() {
                 if (ttt_tabpanel.isActiveTab('tracking'))
@@ -175,7 +187,7 @@ Ext.onDocumentReady(function() {
             },
             defaultEventAction: 'stopEvent'
         }, {
-            key: Ext.EventObject.E,
+            key: Ext.event.Event.E,
             alt: true,
             handler: function() {
                 if (ttt_tabpanel.isActiveTab('tracking'))
@@ -183,7 +195,7 @@ Ext.onDocumentReady(function() {
             },
             defaultEventAction: 'stopEvent'
         }, {
-            key: Ext.EventObject.I,
+            key: Ext.event.Event.I,
             alt: true,
             handler: function() {
                 if (ttt_tabpanel.isActiveTab('tracking'))
@@ -191,7 +203,7 @@ Ext.onDocumentReady(function() {
             },
             defaultEventAction: 'stopEvent'
         }, {
-            key: Ext.EventObject.P,
+            key: Ext.event.Event.P,
             alt: true,
             handler: function() {
                 if (ttt_tabpanel.isActiveTab('tracking'))
@@ -199,7 +211,7 @@ Ext.onDocumentReady(function() {
             },
             defaultEventAction: 'stopEvent'
         }, {
-            key: Ext.EventObject.R,
+            key: Ext.event.Event.R,
             alt: true,
             handler: function() {
                 if (ttt_tabpanel.isActiveTab('tracking'))
@@ -209,7 +221,7 @@ Ext.onDocumentReady(function() {
             },
             defaultEventAction: 'stopEvent'
         }, {
-            key: Ext.EventObject.X,
+            key: Ext.event.Event.X,
             alt: true,
             handler: function() {
                 if (ttt_tabpanel.isActiveTab('tracking'))
@@ -218,7 +230,7 @@ Ext.onDocumentReady(function() {
             defaultEventAction: 'stopEvent'
         }, {
             // Alt + Number is used for Tab switching
-            key: [ Ext.EventObject.ONE, Ext.EventObject.TWO, Ext.EventObject.THREE, Ext.EventObject.FOUR, Ext.EventObject.FIVE, Ext.EventObject.SIX, Ext.EventObject.SEVEN ],
+            key: [ Ext.event.Event.ONE, Ext.event.Event.TWO, Ext.event.Event.THREE, Ext.event.Event.FOUR, Ext.event.Event.FIVE, Ext.event.Event.SIX, Ext.event.Event.SEVEN ],
             alt: true,
             handler: function(key, e) {
                 switchTab(parseInt(key) - 48);

@@ -5,6 +5,6 @@ Ext.define('Netresearch.model.Customer', {
         {name: 'name', type: 'string'},
         {name: 'active', type: 'boolean'},
         {name: 'global', type: 'boolean'},
-        {name: 'teams', type: 'array'}
+        {name: 'teams', type: 'auto'}
     ]
 });

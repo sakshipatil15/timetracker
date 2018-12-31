@@ -2,21 +2,6 @@ Ext.define('Netresearch.widget.Tracking', {
 
     extend: 'Ext.grid.Panel',
 
-    requires: [
-        'Netresearch.store.Entries',
-        'Netresearch.store.Customers',
-        'Netresearch.store.Projects',
-        'Netresearch.store.Activities',
-        'Netresearch.store.AdminUsers',
-        'Ext.ux.window.Notification'
-    ],
-
-    /* Create stores */
-    customerStore: Ext.create('Netresearch.store.Customers'),
-    projectStore: Ext.create('Netresearch.store.Projects'),
-    activityStore: Ext.create('Netresearch.store.Activities'),
-    userStore: Ext.create('Netresearch.store.AdminUsers'),
-    ticketSystemStore: Ext.create('Netresearch.store.TicketSystems'),
     startTime : null,
 
     /* Strings */
@@ -304,7 +289,7 @@ Ext.define('Netresearch.widget.Tracking', {
                         selectOnFocus: true,
                         forceSelection: true,
                         lazyRender: true,
-                        store: this.customerStore,
+                        store: Ext.data.StoreManager.lookup('customerStore'),
                         listClass: 'x-combo-list-small',
                         queryMode: 'local',
                         displayField: 'name',
@@ -313,15 +298,15 @@ Ext.define('Netresearch.widget.Tracking', {
                         listeners: {
                             scope: this,
                             focus: function(field, value) {
-                                this.customerStore.load(true);
+                                Ext.data.StoreManager.lookup('customerStore').load(true);
                             },
                             blur: function(field, options) {
-                                this.customerStore.load(false);
+                                Ext.data.StoreManager.lookup('customerStore').load(false);
                             }
                         }
                     },
                     renderer: function(id) {
-                        const record = this.customerStore.getById(id);
+                        const record = Ext.data.StoreManager.lookup('customerStore').getById(id);
                         return record ? record.get('name') : id;
                     }
                 }, {
@@ -338,7 +323,7 @@ Ext.define('Netresearch.widget.Tracking', {
                         selectOnFocus: true,
                         forceSelection: true,
                         lazyRender: true,
-                        store: this.projectStore,
+                        store: Ext.data.StoreManager.lookup('projectStore'),
                         listClass: 'x-combo-list-small',
                         queryMode: 'local',
                         displayField: 'name',
@@ -352,7 +337,7 @@ Ext.define('Netresearch.widget.Tracking', {
                                     ticket = null;
                                 }
 
-                                this.projectStore.loadData(projectsData, this.getSelectedField('customer'), ticket, true);
+                                Ext.data.StoreManager.lookup('projectStore').loadData(projectsData, this.getSelectedField('customer'), ticket, true);
                             },
                             blur: function(field, options) {
                                 // this.clearProjectStore();
@@ -360,7 +345,7 @@ Ext.define('Netresearch.widget.Tracking', {
                         }
                     },
                     renderer: function(id) {
-                        const record = this.projectStore.getById(id);
+                        const record = Ext.data.StoreManager.lookup('projectStore').getById(id);
                         return record ? record.get('name') : id;
                     }
                 }, {
@@ -377,7 +362,7 @@ Ext.define('Netresearch.widget.Tracking', {
                         selectOnFocus: true,
                         forceSelection: true,
                         lazyRender: true,
-                        store: this.activityStore,
+                        store: Ext.data.StoreManager.lookup('activityStore'),
                         listClass: 'x-combo-list-small',
                         queryMode: 'local',
                         displayField: 'name',
@@ -385,7 +370,7 @@ Ext.define('Netresearch.widget.Tracking', {
                         anchor: '100%'
                     },
                     renderer: function(id) {
-                        const record = this.activityStore.getById(id);
+                        const record = Ext.data.StoreManager.lookup('activityStore').getById(id);
                         return record ? record.get('name') : id;
                     }
                 }, {
@@ -574,7 +559,7 @@ Ext.define('Netresearch.widget.Tracking', {
                                 if (value.id === record.data.project) {
                                      record.data.customer = parseInt(value.customer);
                                      record.commit();
-                                     this.customerStore.load();
+                                     Ext.data.StoreManager.lookup('customerStore').load();
                                      break;
                                 }
                             }
@@ -684,8 +669,8 @@ Ext.define('Netresearch.widget.Tracking', {
 
         try{
             const projectMapping = this.mapTicketToProject(ticket);
-            const project = this.projectStore.getById(projectMapping.id);
-            const ticketSystem = this.ticketSystemStore.getById(project.get('ticket_system'));
+            const project = Ext.data.StoreManager.lookup('projectStore').getById(projectMapping.id);
+            const ticketSystem = Ext.data.StoreManager.lookup('ticketSystemStore').getById(project.get('ticket_system'));
             baseUrl = ticketSystem.get('ticketUrl');
             if (baseUrl == '') {
                 throw "empty baseUrl";
@@ -1095,10 +1080,10 @@ Ext.define('Netresearch.widget.Tracking', {
      */
     refresh: function() {
         this.clearProjectStore();
-        this.customerStore.load();
-        this.activityStore.load();
-        this.userStore.load();
-        this.ticketSystemStore.load();
+        Ext.data.StoreManager.lookup('customerStore').load();
+        Ext.data.StoreManager.lookup('activityStore').load();
+        Ext.data.StoreManager.lookup('adminUserStore').load();
+        Ext.data.StoreManager.lookup('ticketSystemStore').load();
         this.getStore().load();
 
         this.getView().refresh();
@@ -1150,7 +1135,7 @@ Ext.define('Netresearch.widget.Tracking', {
      * Reload data from json var into project store (json var is set on page load by symfony output)
      */
     clearProjectStore: function() {
-        this.projectStore.loadData(projectsData, null, null, false);
+        Ext.data.StoreManager.lookup('projectStore').loadData(projectsData, null, null, false);
     },
 
     getSelectedIndex: function() {
@@ -1271,7 +1256,7 @@ Ext.define('Netresearch.widget.Tracking', {
     },
 
     getCustomerName: function(id) {
-        const store = this.customerStore;
+        const store = Ext.data.StoreManager.lookup('customerStore');
         for (let c = 0; c < store.getCount(); c++) {
             const record = store.getAt(c);
             if (record.data.id == id)
@@ -1281,7 +1266,7 @@ Ext.define('Netresearch.widget.Tracking', {
     },
 
     getProjectName: function(id) {
-        const store = this.projectStore;
+        const store = Ext.data.StoreManager.lookup('projectStore');
         for (let c = 0; c < store.getCount(); c++) {
             const record = store.getAt(c);
             if (record.data.id == id)
@@ -1291,7 +1276,7 @@ Ext.define('Netresearch.widget.Tracking', {
     },
 
     getActivityName: function(id) {
-        const activity = this.activityStore.findRecord('id', id);
+        const activity = Ext.data.StoreManager.lookup('activityStore').findRecord('id', id);
         if (undefined != activity)
             return activity.data.name;
         return null;

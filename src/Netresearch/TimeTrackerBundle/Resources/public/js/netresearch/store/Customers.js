@@ -1,5 +1,6 @@
 Ext.define('Netresearch.store.Customers', {
 	extend: 'Ext.data.Store',
+    alias: 'store.customers',
 	
 	requires: [
    	    'Netresearch.model.Customer'
@@ -23,7 +24,7 @@ Ext.define('Netresearch.store.Customers', {
             record = customersData[key].customer;
 
             if (!(record instanceof Ext.data.Model)) {
-                record = Ext.ModelManager.create(record, this.model);
+                record = Ext.create(this.model, record);
             }
 
             if (onlyActive) {

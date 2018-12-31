@@ -10,13 +10,14 @@ Ext.define('Netresearch.widget.Interpretation', {
         'Netresearch.store.AdminTeams',
         'Netresearch.store.Users'
     ],
-
+/*
     customerStore: Ext.create('Netresearch.store.Customers'),
     projectStore: Ext.create('Netresearch.store.AdminProjects'),
     filterableProjectStore: Ext.create('Netresearch.store.Projects'),
     teamStore: Ext.create('Netresearch.store.AdminTeams'),
     userStore: Ext.create('Netresearch.store.Users'),
     activityFilterStore: Ext.create('Netresearch.store.Activities'),
+*/
 
     /* Strings */
     _tabTitle: 'Interpretation',
@@ -107,9 +108,6 @@ Ext.define('Netresearch.widget.Interpretation', {
 
     entryStore: Ext.create('Ext.data.JsonStore', {
         fields: ['name', 'hours', 'quota'],
-        requires: [
-            'Netresearch.model.Entry'
-        ],
         autoLoad: false,
         sortOnLoad: true,
         model: 'Netresearch.model.Entry',

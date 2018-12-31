@@ -1,5 +1,6 @@
 Ext.define('Netresearch.store.Projects', {
     extend: 'Ext.data.Store',
+    storeId: 'projectStore',
 
     requires: [
            'Netresearch.model.Project'
@@ -43,35 +44,11 @@ Ext.define('Netresearch.store.Projects', {
 
         this.currentCustomer = parseInt(customer);
 
-        var newData = [], record;
-
         if (! projects.length) {
             this.removeAll();
             return;
         }
 
-        for (var key in projects) {
-            record = projects[key];
-
-            if (!(record instanceof Ext.data.Model)) {
-                record = Ext.ModelManager.create(record, this.model);
-            }
-
-            if (onlyActive) {
-                if ('1' != record.data.active) {
-                    // console.log("Project " + record.data.id + " is inactive.");
-                    continue;
-                }
-            }
-
-            newData.push(record);
-
-            this.add(record);
-
-            // if (customer != 'all')
-            //    console.log("Loading project " + record.data.id + " (" + record.data.name + " of customer " + record.data.customer + ") for customer " + customer);
-        }
-
-        this.loadRecords(newData, {"append": false});
+        this.callParent(projects, false);
     }
 });

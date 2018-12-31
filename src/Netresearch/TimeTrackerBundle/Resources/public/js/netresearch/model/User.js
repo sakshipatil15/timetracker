@@ -6,6 +6,6 @@ Ext.define('Netresearch.model.User', {
         {name: 'abbr', type: 'string'},
         {name: 'locale', type: 'string'},
         {name: 'type', type: 'string'},
-        {name: 'teams', type: 'array'}
+        {name: 'teams', type: 'auto'}
     ]
 });
